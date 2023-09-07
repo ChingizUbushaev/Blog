@@ -1,0 +1,55 @@
+from flask import Flask, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
+db.init_app(app)
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), unique=True, nullable=False)
+    text = db.Column(db.Text, nullable=False)
+
+
+@app.route('/create', methods=['POST', 'GET'])
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        text = request.form['text']
+        post = Post(title=title, text=text)
+        try:
+            db.session.add(post)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "В ходе добавления данных произошла ошибка"
+    else:
+        return render_template('create.html')
+
+
+@app.route('/')
+def index():
+    posts = Post.query.all()
+    return render_template('index.html', posts=posts)
+
+
+@app.route('/test')
+def test():
+    pass
+
+
+@app.route('/post/<post_id>')
+def full_post(post_id):
+    post = Post.query.filter_by(id=post_id).one()
+    return render_template('post.html', post=post)
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
