@@ -35,12 +35,36 @@ def index():
     return render_template('index.html', posts=posts)
 
 
-@app.route('/test')
-def test():
-    pass
+@app.route('/edit_post/<post_id>', methods=['POST', 'GET'])
+def edit_post(post_id):
+    if request.method == 'POST':
+        try:
+            post = Post.query.filter_by(id=post_id).one()
+            post.title = request.form['title']
+            post.text = request.form['text']
+            db.session.add(post)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "В ходе изменения данных произошла ошибка"
+    else:
+        return render_template('edit_post.html')
+
+@app.route('/delete_post/<post_id>', methods=['POST', 'GET'])
+def delete_post(post_id):
+    if request.method == 'GET':
+        try:
+            post = Post.query.filter_by(id=post_id).one()
+            db.session.delete(post)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "В ходе удаления данных произошла ошибка"
+    else:
+        return 'Пост удалён'
 
 
-@app.route('/post/<post_id>')
+@app.route('/post/<post_id>', methods=['POST', 'GET'])
 def full_post(post_id):
     post = Post.query.filter_by(id=post_id).one()
     return render_template('post.html', post=post)

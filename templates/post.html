@@ -8,17 +8,20 @@
     <div class="col-md-6">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary-emphasis">Идентификатор поста: {{ post.id}}</strong>
+          <strong class="d-inline-block mb-2 text-primary-emphasis">Идентификатор поста: {{ post.id }}</strong>
           <h3 class="mb-0">Заголовок: {{post.title}}</h3>
           <div class="mb-1 text-body-secondary">date of publication</div>
             <div class="text">{{ post.text }}</div>
           <!--<a href="{{url_for('full_post', post_id=post.id)}}" class="icon-link gap-1 icon-link-hover stretched-link">
             Читать далее-->
             <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-          </a>
         </div>
       </div>
 
     </div>
+</div>
+<div class="button">
+<button type="button" class="btn btn-success"><a href="{{url_for('edit_post', post_id=post.id)}}" class="nav-link px-2">Изменить пост</a></button>
+  <button type="submit" class="btn btn-success"><a href="{{url_for('delete_post', post_id=post.id)}}" class="nav-link px-2">Удалить пост</a></button>
 </div>
 {% endblock %}
